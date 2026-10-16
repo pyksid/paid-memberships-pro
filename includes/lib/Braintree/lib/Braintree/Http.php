@@ -190,7 +190,9 @@ class Http
             throw new Exception\Timeout();
         }
 
-        curl_close($curl);
+        if (isset($curl) && (is_resource($curl) || (class_exists('\\CurlHandle') && $curl instanceof \\CurlHandle))) {
+            curl_close($curl);
+        }
         if ($this->_config->sslOn()) {
             if ($httpStatus == 0) {
                 throw new Exception\SSLCertificate($error, $error_code);
