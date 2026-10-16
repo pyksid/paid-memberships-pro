@@ -44,7 +44,9 @@ class Twocheckout_Api_Requester
         curl_setopt($ch, CURLOPT_USERAGENT, "2Checkout PHP/0.1.0%s");
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         $resp = curl_exec($ch);
-        curl_close($ch);
+        if (isset($ch) && (is_resource($ch) || (class_exists('\\CurlHandle') && $ch instanceof \\CurlHandle))) {
+            curl_close($ch);
+        }
         if ($resp === FALSE) {
             throw new Twocheckout_Error("cURL call failed", "403");
         } else {
